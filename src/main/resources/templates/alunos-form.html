@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<!-- src/main/resources/templates/alunos-form.html -->
+
+<!--
+  ═══════════════════════════════════════════
+   CAMADA  →  VIEW  (alunos-form.html)
+  ═══════════════════════════════════════════
+
+  Responsabilidades desta camada:
+    ✔ Apresentar a interface ao usuário
+    ✔ Coletar entrada e enviar ao Controller via formulário
+    ✔ Exibir mensagens de erro vindas do Controller (flash attributes)
+
+  O que NÃO pertence aqui:
+    ✘ Regras de negócio (validações de domínio)
+    ✘ Acesso direto ao banco de dados
+    ✘ Lógica de roteamento HTTP
+-->
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Cadastro de Alunos · MVC Demo</title>
+    <style>
+        /* ── Reset & Base ── */
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f0f4f8;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        /* ── Card ── */
+        .card {
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,.10);
+            padding: 2.5rem 3rem;
+            width: 100%;
+            max-width: 460px;
+        }
+
+        /* ── Header ── */
+        .card-header { margin-bottom: 2rem; text-align: center; }
+        .badge-mvc {
+            display: inline-block;
+            background: #e0edff;
+            color: #2563eb;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            padding: .25rem .75rem;
+            border-radius: 999px;
+            margin-bottom: .75rem;
+        }
+        h1 { font-size: 1.6rem; color: #1e293b; }
+        .subtitle { font-size: .9rem; color: #64748b; margin-top: .4rem; }
+
+        /* ── Form ── */
+        .form-group { margin-bottom: 1.25rem; }
+        label {
+            display: block;
+            font-size: .85rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: .4rem;
+        }
+        input[type="text"] {
+            width: 100%;
+            padding: .65rem 1rem;
+            border: 1.5px solid #d1d5db;
+            border-radius: 8px;
+            font-size: .95rem;
+            color: #111827;
+            transition: border-color .2s;
+            outline: none;
+        }
+        input[type="text"]:focus { border-color: #2563eb; box-shadow: 0 0 0 3px #dbeafe; }
+
+        /* ── Button ── */
+        .btn-primary {
+            width: 100%;
+            padding: .75rem;
+            background: #2563eb;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background .2s, transform .1s;
+            margin-top: .5rem;
+        }
+        .btn-primary:hover  { background: #1d4ed8; }
+        .btn-primary:active { transform: scale(.98); }
+
+        /* ── Error alert ── */
+        .alert-error {
+            background: #fef2f2;
+            border: 1.5px solid #fca5a5;
+            border-radius: 8px;
+            color: #b91c1c;
+            font-size: .875rem;
+            padding: .75rem 1rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        /* ── MVC legend ── */
+        .mvc-legend {
+            margin-top: 2rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid #e5e7eb;
+            font-size: .78rem;
+            color: #94a3b8;
+            text-align: center;
+        }
+        .mvc-legend span { font-weight: 700; color: #64748b; }
+    </style>
+</head>
+<body>
+
+<main class="card">
+
+    <!-- ── Cabeçalho ── -->
+    <header class="card-header">
+        <div class="badge-mvc">VIEW · alunos-form.html</div>
+        <h1>Cadastro de Alunos</h1>
+        <p class="subtitle">Preencha os dados abaixo para adicionar um aluno.</p>
+    </header>
+
+    <!-- ── Exibe erro vindo do Controller via RedirectAttributes ── -->
+    <!-- th:if → View só apresenta; não valida regra -->
+    <div class="alert-error" th:if="${erro}">
+        ⚠ <span th:text="${erro}">Mensagem de erro</span>
+    </div>
+
+    <!--
+        Formulário envia POST para /alunos.
+        O Controller (AlunoController) receberá os parâmetros "nome" e "matricula".
+    -->
+    <form action="/alunos" method="post">
+
+        <div class="form-group">
+            <label for="nome">Nome completo</label>
+            <input type="text"
+                   id="nome"
+                   name="nome"
+                   placeholder="Ex.: Ana Paula Oliveira"
+                   required
+                   autofocus/>
+        </div>
+
+        <div class="form-group">
+            <label for="matricula">Matrícula</label>
+            <input type="text"
+                   id="matricula"
+                   name="matricula"
+                   placeholder="Ex.: 2024001"/>
+        </div>
+
+        <button type="submit" class="btn-primary">Cadastrar Aluno →</button>
+
+    </form>
+
+    <!-- ── Legenda didática ── -->
+    <footer class="mvc-legend">
+        <span>VIEW</span> — apenas exibe e coleta dados.<br/>
+        Regras de negócio vivem no <span>MODEL</span>.
+        Roteamento fica no <span>CONTROLLER</span>.
+    </footer>
+
+</main>
+
+</body>
+</html>

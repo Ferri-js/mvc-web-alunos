@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<!-- src/main/resources/templates/alunos-lista.html -->
+
+<!--
+  ═══════════════════════════════════════════
+   CAMADA  →  VIEW  (alunos-lista.html)
+  ═══════════════════════════════════════════
+
+  Esta View recebe do Controller o atributo "alunos"
+  (uma List<Aluno>) e apenas o itera para exibição.
+  Nenhuma lógica de negócio existe aqui.
+-->
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Lista de Alunos · MVC Demo</title>
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: #f0f4f8;
+            min-height: 100vh;
+            display: flex;
+            align-items: flex-start;
+            justify-content: center;
+            padding: 3rem 2rem;
+        }
+
+        .card {
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 4px 24px rgba(0,0,0,.10);
+            padding: 2.5rem 3rem;
+            width: 100%;
+            max-width: 640px;
+        }
+
+        /* ── Header ── */
+        .card-header { margin-bottom: 2rem; }
+        .badge-mvc {
+            display: inline-block;
+            background: #ecfdf5;
+            color: #059669;
+            font-size: .72rem;
+            font-weight: 700;
+            letter-spacing: .08em;
+            text-transform: uppercase;
+            padding: .25rem .75rem;
+            border-radius: 999px;
+            margin-bottom: .75rem;
+        }
+        h1 { font-size: 1.6rem; color: #1e293b; }
+        .subtitle { font-size: .9rem; color: #64748b; margin-top: .35rem; }
+
+        /* ── Counter chip ── */
+        .counter-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 999px;
+            padding: .3rem .9rem;
+            font-size: .82rem;
+            color: #1d4ed8;
+            font-weight: 600;
+            margin-top: .75rem;
+        }
+
+        /* ── Table ── */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            margin-top: 1.5rem;
+        }
+        table { width: 100%; border-collapse: collapse; }
+        thead { background: #f8fafc; }
+        th {
+            text-align: left;
+            padding: .75rem 1rem;
+            font-size: .8rem;
+            font-weight: 700;
+            letter-spacing: .05em;
+            text-transform: uppercase;
+            color: #6b7280;
+            border-bottom: 1.5px solid #e5e7eb;
+        }
+        td {
+            padding: .8rem 1rem;
+            font-size: .9rem;
+            color: #374151;
+            border-bottom: 1px solid #f3f4f6;
+        }
+        tr:last-child td { border-bottom: none; }
+        tbody tr:hover { background: #f9fafb; }
+
+        /* ── Row number ── */
+        td.row-num {
+            color: #9ca3af;
+            font-size: .8rem;
+            font-weight: 700;
+            width: 48px;
+        }
+
+        /* ── Empty state ── */
+        .empty-state {
+            text-align: center;
+            padding: 2.5rem 1rem;
+            color: #9ca3af;
+            font-size: .9rem;
+        }
+
+        /* ── Back button ── */
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            gap: .4rem;
+            margin-top: 1.75rem;
+            padding: .6rem 1.25rem;
+            background: #f1f5f9;
+            color: #374151;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 8px;
+            text-decoration: none;
+            font-size: .875rem;
+            font-weight: 600;
+            transition: background .2s;
+        }
+        .btn-back:hover { background: #e2e8f0; }
+
+        /* ── MVC legend ── */
+        .mvc-legend {
+            margin-top: 2rem;
+            padding-top: 1.25rem;
+            border-top: 1px solid #e5e7eb;
+            font-size: .78rem;
+            color: #94a3b8;
+        }
+        .mvc-legend span { font-weight: 700; color: #64748b; }
+    </style>
+</head>
+<body>
+
+<main class="card">
+
+    <!-- ── Cabeçalho ── -->
+    <header class="card-header">
+        <div class="badge-mvc">VIEW · alunos-lista.html</div>
+        <h1>Alunos Cadastrados</h1>
+        <p class="subtitle">
+            Lista atualizada recebida do <strong>Controller</strong>
+            via <code>model.addAttribute("alunos", alunos)</code>.
+        </p>
+
+        <!-- Thymeleaf conta os itens da lista — View não calcula regra, só exibe -->
+        <div class="counter-chip">
+            📋 <span th:text="${#lists.size(alunos)}">0</span> aluno(s) registrado(s)
+        </div>
+    </header>
+
+    <!-- ── Tabela ── -->
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Nome</th>
+                    <th>Matrícula</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <!--
+                    th:each itera sobre a lista "alunos" injetada pelo Controller.
+                    aluno.nome e aluno.matricula chamam os getters do Model (Aluno.java).
+                    A View nunca acessa o banco diretamente — recebe dados prontos.
+                -->
+                <tr th:if="${#lists.isEmpty(alunos)}">
+                    <td colspan="3" class="empty-state">
+                        Nenhum aluno cadastrado ainda.
+                    </td>
+                </tr>
+
+                <tr th:each="aluno, iterStat : ${alunos}">
+                    <td class="row-num" th:text="${iterStat.count}">1</td>
+                    <td th:text="${aluno.nome}">Nome do Aluno</td>
+                    <td th:text="${aluno.matricula ?: '—'}">Matrícula</td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+    <!-- ── Ação de retorno ── -->
+    <a href="/alunos" class="btn-back">← Cadastrar outro aluno</a>
+
+    <!-- ── Legenda didática ── -->
+    <footer class="mvc-legend">
+        <strong>Fluxo MVC desta página:</strong><br/>
+        <span>Model</span> (Aluno.java) → dados do domínio &nbsp;|&nbsp;
+        <span>Controller</span> (AlunoController) → injetou a lista &nbsp;|&nbsp;
+        <span>View</span> (este arquivo) → apenas itera e exibe.
+    </footer>
+
+</main>
+
+</body>
+</html>
